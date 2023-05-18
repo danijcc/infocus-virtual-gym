@@ -47,15 +47,33 @@ class AuthController extends Controller
     
    }
        // endpoint login
-       public function login (LoginRequest $request)
-       {
-           dd($request->all());
-        //    $credentials = $request->only('email', 'password');
+    //    public function login (LoginRequest $request)
+    //    {
+    //        dd($request->all());
+    //        $credentials = $request->only('email', 'password');
    
-        //    if (! $token = auth()->attempt($credentials)) {
-        //        return response()->json(['error' => 'Unauthorized'], 401);
-        //    }
+    //        if (! $token = auth()->attempt($credentials)) {
+    //             return response()->json(['error' => 'Unauthorized'], 401);
+    //         }
    
-        //    return $this->respondWithToken($token);
-       }
+    //         return $this->respondWithToken($token);
+    //    }
+    public function login (LoginRequest $request){
+        
+        $credencials = $request->only('email', 'password');
+            try{
+                if(!$token = JWTAuth::attempt($credencials)) {
+                    return response()->json([
+                        'error' => 'invalid credencials'
+                    ], 400);
+                }
+            }
+             catch  (JWTException $e) {
+                return response()->json([
+                    'error' => 'not create token'
+                ], 500);
+            }     
+
+        return response()->json(compact('token'));    
+    }
 }
