@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', 'App\Http\Controllers\Auth\AuthController@register');
 Route::post('login', 'App\Http\Controllers\Auth\AuthController@login');
 Route::get('users', 'App\Http\Controllers\UserController@index');
+
+
+//protected routes
+Route::middleware('jwt.verify')->group(function(){
+    Route::get('users', 'App\Http\Controllers\UserController@index');
+});
